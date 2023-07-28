@@ -49,7 +49,7 @@ function Invoke-TestConnection {
     param (
         $destinationServer
     )
-    $test = $(Test-Connection $destinationServer -Count 1 -TimeoutSeconds 1)
+    $test = $(Test-Connection $destinationServer -Count 1)
     if($test.Status -ne "Success"){
         $falilureCounter++
         return $false
