@@ -1,6 +1,20 @@
 using module ./Config.psm1
+
+# Invoke-PS2EXE `
+#     -inputFile "Main.ps1" `
+#     -outputFile "Main.exe"  `
+#     -iconFile ".\Icon\Powershell.ico" `
+#     -company "Stanislaw Horna" `
+#     -title "Monitor_Network_Availability" `
+#     -version "1.0.0.0" `
+#     -copyright "Stanislaw Horna" `
+#     -product "Monitor_Network_Availability"
+
+Param(
+    $Defaultlocation
+)
+
 Add-Type -AssemblyName System.Windows.Forms
-New-Variable -Name "location" -Value "$((Get-Location).Path)" -Force -Scope Global -Option ReadOnly
 New-Variable -Name "logsPath" -Value "$location/Logs" -Force -Scope Global -Option ReadOnly
 New-Variable -Name "falilureCounter" -Value 0 -Force -Scope Global
 New-Variable -Name "errorDetails" -Value "" -Force -Scope Global
@@ -8,7 +22,13 @@ New-Variable -Name 'pingsLatency' -Value $(New-Object System.Collections.ArrayLi
 New-Variable -Name 'averageLatency' -Value 0 -Force -Scope Global
 
 function Invoke-Main {
+    if($null -ne $Defaultlocation){
+        New-Variable -Name "location" -Value $Defaultlocation -Force -Scope Global -Option ReadOnly
+        New-Variable -Name "logsPath" -Value "$location/Logs" -Force -Scope Global -Option ReadOnly
+        Set-Location $location
+    }
     $Global:ProgressPreference = 'SilentlyContinue'
+    $Global:ErrorActionPreference = 'SilentlyContinue'
     Invoke-WelcomeMessage -Title "Monitor Network Availability" -Portal $([Configuration]::serverNameToPing)
     if ($([Configuration]::logEnabled) -eq $true) {
         Invoke-FolderStructure
@@ -167,7 +187,7 @@ function Invoke-WelcomeMessage {
 function Set-ConsoleSize {
     Param(
         [Parameter(Mandatory = $False, Position = 0)]
-        [int]$Height = 10,
+        [int]$Height = 15,
         [Parameter(Mandatory = $False, Position = 1)]
         [int]$Width = 50,
         [string]$title
@@ -194,6 +214,7 @@ function Set-ConsoleSize {
     If ($ConBuffer.Height -gt $Height ) {
         $currHeight = $Height
     }
+    $host.UI.RawUI.WindowTitle = "Monitor Network Availability"
     $host.UI.RawUI.WindowSize = New-Object System.Management.Automation.Host.size($currWidth, $currHeight)
     $host.UI.RawUI.BufferSize = New-Object System.Management.Automation.Host.size($Width, $Height)
     $host.UI.RawUI.WindowSize = New-Object System.Management.Automation.Host.size($Width, $Height)
@@ -221,9 +242,9 @@ Function Invoke-Popup {
         [Parameter(Mandatory = $true)]
         [String] $description
     )
+    $imgIcon = New-Object system.drawing.icon (([Configuration]::IconPath))
     $global:endmsg = New-Object System.Windows.Forms.Notifyicon
-    $p = (Get-Process powershell | Sort-Object -Property CPU -Descending | Select-Object -First 1).Path
-    $endmsg.Icon = [System.Drawing.Icon]::ExtractAssociatedIcon($p)
+    $endmsg.Icon = $imgIcon
     $endmsg.BalloonTipTitle = $title
     $endmsg.BalloonTipText = $description
     $endmsg.Visible = $true

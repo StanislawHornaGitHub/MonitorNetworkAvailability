@@ -13,5 +13,5 @@ class Configuration {
     static [string] $ConnectionFailed_popupDescription = "Connection to host $([Configuration]::serverNameToPing) is lost"
     static [string] $HighLatencyWarining_pop_popupTitle = "High ping latency"
     static [string] $HighLatencyWarining_popupDescription = "Average latency of last $([Configuration]::numberOfPingsToCalculateAverage) pings is greater than $([Configuration]::averageLatencyThresholdToDisplayNotification) ms"
-
+    static [string] $IconPath =".\Icon\Powershell.ico"
 }
