@@ -239,6 +239,9 @@ Function Invoke-Popup {
         [Parameter(Mandatory = $true)]
         [String] $description
     )
+    if($null -ne $global:endmsg){
+        $endmsg.Dispose()
+    }
     $imgIcon = New-Object system.drawing.icon (([Configuration]::IconPath))
     $global:endmsg = New-Object System.Windows.Forms.Notifyicon
     $endmsg.Icon = $imgIcon

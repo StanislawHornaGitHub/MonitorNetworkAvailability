@@ -1,5 +1,5 @@
 class Configuration {
-    static [int] $averageLatencyThresholdToDisplayNotification = 10 # Default: 200
+    static [int] $averageLatencyThresholdToDisplayNotification = 200 # Default: 200
     static [int] $numberOfPingsToCalculateAverage = 5 # Default 10
     static [int] $delayBetweenPingsInSeconds = 5 # Default: 5
     static [int] $numberOfFailedPingsToDisplayNotification = 5 # Default: 5   
