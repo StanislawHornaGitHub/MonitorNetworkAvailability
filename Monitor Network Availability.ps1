@@ -46,7 +46,7 @@ function Invoke-Main {
         if ($Global:latencyToGraph.count -ge 1) {
             if ($firstGraph -eq $true) {
                 Show-Graph -Datapoints $Global:latencyToGraph `
-                    -XAxisTitle "Time" `
+                    -XAxisTitle "Time interval $([Configuration]::delayBetweenPingsInSeconds) s" `
                     -YAxisTitle "Latency" `
                     -Y_max $([Configuration]::graphScaleMax) `
                     -Y_min $([Configuration]::graphScaleMin)
@@ -54,7 +54,7 @@ function Invoke-Main {
             }
             else {
                 Update-Graph -Datapoints $Global:latencyToGraph `
-                    -XAxisTitle "Time" `
+                    -XAxisTitle "Time interval $([Configuration]::delayBetweenPingsInSeconds) s" `
                     -YAxisTitle "Latency" `
                     -Y_max $([Configuration]::graphScaleMax) `
                     -Y_min $([Configuration]::graphScaleMin)
@@ -192,7 +192,7 @@ function Invoke-WelcomeMessage {
         $line += "-"
     }
     Clear-Host
-    Set-ConsoleSize -title $Title
+    Set-ConsoleTitle -title $Title
     Write-Host $line
     Write-Host $Title
     Write-Host $line
@@ -201,41 +201,11 @@ function Invoke-WelcomeMessage {
         Write-Host $line
     }
 }
-
-function Set-ConsoleSize {
-    Param(
-        [Parameter(Mandatory = $False, Position = 0)]
-        [int]$Height = 15,
-        [Parameter(Mandatory = $False, Position = 1)]
-        [int]$Width = 50,
-        [string]$title
-    )
-    $console = $host.ui.rawui
-    $ConBuffer = $console.BufferSize
-    $ConSize = $console.WindowSize
-
-    $currWidth = $ConSize.Width
-    $currHeight = $ConSize.Height
-    if ($title) {
-        $Width = ($title.Length)
-    }
-
-    if ($Height -gt $host.UI.RawUI.MaxPhysicalWindowSize.Height) {
-        $Height = $host.UI.RawUI.MaxPhysicalWindowSize.Height
-    }
-    if ($Width -gt $host.UI.RawUI.MaxPhysicalWindowSize.Width) {
-        $Width = $host.UI.RawUI.MaxPhysicalWindowSize.Width
-    }
-    If ($ConBuffer.Width -gt $Width ) {
-        $currWidth = $Width
-    }
-    If ($ConBuffer.Height -gt $Height ) {
-        $currHeight = $Height
-    }
-    $host.UI.RawUI.WindowTitle = "Monitor Network Availability"
-    #$host.UI.RawUI.WindowSize = New-Object System.Management.Automation.Host.size($currWidth, $currHeight)
-    #$host.UI.RawUI.BufferSize = New-Object System.Management.Automation.Host.size($Width, $Height)
-    #$host.UI.RawUI.WindowSize = New-Object System.Management.Automation.Host.size($Width, $Height)
+function Set-ConsoleTitle {
+	param(
+		$ConsoleTitle
+	)
+	$host.UI.RawUI.WindowTitle = $ConsoleTitle
 }
 
 function Remove-LastLine {
