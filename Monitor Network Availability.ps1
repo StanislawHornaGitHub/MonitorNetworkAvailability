@@ -12,6 +12,7 @@ using module ./Config.psm1
 
 
 Add-Type -AssemblyName System.Windows.Forms
+New-Variable -Name "location" -Value "$((Get-Location).Path)" -Force -Scope Global -Option ReadOnly
 New-Variable -Name "logsPath" -Value "$location/Logs" -Force -Scope Global -Option ReadOnly
 New-Variable -Name "falilureCounter" -Value 0 -Force -Scope Global
 New-Variable -Name "errorDetails" -Value "" -Force -Scope Global
@@ -20,11 +21,6 @@ New-Variable -Name 'averageLatency' -Value 0 -Force -Scope Global
 New-Variable -Name 'latencyToGraph' -Value $(New-Object System.Collections.ArrayList) -Force -Scope Global
 
 function Invoke-Main {
-    if ($null -ne $Defaultlocation) {
-        New-Variable -Name "location" -Value $Defaultlocation -Force -Scope Global -Option ReadOnly
-        New-Variable -Name "logsPath" -Value "$location/Logs" -Force -Scope Global -Option ReadOnly
-        Set-Location $location
-    }
     $Global:ProgressPreference = 'SilentlyContinue'
     $Global:ErrorActionPreference = 'SilentlyContinue'
     Invoke-WelcomeMessage -Title "Monitor Network Availability" -Portal $([Configuration]::serverNameToPing)
