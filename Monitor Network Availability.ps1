@@ -298,7 +298,7 @@ function Show-Graph {
     }
     # Graduation on Y scale correction
     if ($numOfDatapoints -lt ($graphHeight - 1)) {
-        if([int]($scaleMax - $scaleMin + 1) -lt ($($host.UI.RawUI.WindowSize.Height) / 2)){
+        if ([int]($scaleMax - $scaleMin + 1) -lt ($($host.UI.RawUI.WindowSize.Height) / 2)) {
             $graphHeight = [int]($scaleMax - $scaleMin + 1)
         }
     }
@@ -422,6 +422,9 @@ function Show-Graph {
         $lineToDisplay += "$scaleNumber"
         # Add Y Axis line
         $lineToDisplay += "|"
+        $AxisToDisplay = $lineToDisplay
+        Write-Host $AxisToDisplay -NoNewline
+        $lineToDisplay = ""
         for ($j = 0; $j -lt $Datapoints.Count; $j++) {
             if ($Datapoints[$j] -ge $scaleNumber) {
                 $lineToDisplay += "$([char] 9608)"
@@ -430,7 +433,15 @@ function Show-Graph {
                 $lineToDisplay += " "
             }
         }
-        Write-Host $lineToDisplay
+        if (
+            ($([int]($scaleMax - ($i * $division))) -ge $([Configuration]::averageLatencyThresholdToDisplayNotification)) `
+            -or `
+            $global:falilureCounter -ne 0) {
+            Write-Host "$lineToDisplay`n" -NoNewline -ForegroundColor 'red'
+        }
+        else {
+            Write-Host "$lineToDisplay`n" -NoNewline -ForegroundColor 'green'
+        }
     }
     # If all values are greater than 0 the X axis was not printed
     if ($print_X_Axis -eq $true) {
@@ -481,7 +492,7 @@ function Update-Graph {
     }
     # Graduation on Y scale correction
     if ($numOfDatapoints -lt ($graphHeight - 1)) {
-        if([int]($scaleMax - $scaleMin + 1) -lt ($($host.UI.RawUI.WindowSize.Height) / 2)){
+        if ([int]($scaleMax - $scaleMin + 1) -lt ($($host.UI.RawUI.WindowSize.Height) / 2)) {
             $graphHeight = [int]($scaleMax - $scaleMin + 1)
         }
     }
@@ -605,6 +616,9 @@ function Update-Graph {
         $lineToDisplay += "$scaleNumber"
         # Add Y Axis line
         $lineToDisplay += "|"
+        $AxisToDisplay = $lineToDisplay
+        Write-Host $AxisToDisplay -NoNewline
+        $lineToDisplay = ""
         for ($j = 0; $j -lt $Datapoints.Count; $j++) {
             if ($Datapoints[$j] -ge $scaleNumber) {
                 $lineToDisplay += "$([char] 9608)"
@@ -613,7 +627,16 @@ function Update-Graph {
                 $lineToDisplay += " "
             }
         }
-        Write-Host $lineToDisplay
+        if (
+            ($([int]($scaleMax - ($i * $division))) -ge $([Configuration]::averageLatencyThresholdToDisplayNotification)) `
+            -or `
+            $global:falilureCounter -ne 0) {
+            Write-Host "$lineToDisplay`n" -NoNewline -ForegroundColor 'red'
+        }
+        else {
+            Write-Host "$lineToDisplay`n" -NoNewline -ForegroundColor 'green'
+        }
+        
     }
     # If all values are greater than 0 the X axis was not printed
     if ($print_X_Axis -eq $true) {

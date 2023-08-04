@@ -1,15 +1,15 @@
 class Configuration {
     static [int] $averageLatencyThresholdToDisplayNotification = 200 # Default: 200
-    static [int] $numberOfPingsToCalculateAverage = 5 # Default 10
+    static [int] $numberOfPingsToCalculateAverage = 10 # Default 10
     static [int] $delayBetweenPingsInSeconds = 1 # Default: 5
     static [int] $numberOfFailedPingsToDisplayNotification = 5 # Default: 5   
     static [string] $serverNameToPing = "google.com" # Default: "google.com"
     static [int] $delayBetweenSameNotificationsInSeconds = 20 # Default: 20
 
     static [bool] $displayGraph = $true # Default: $true
-    static [int] $numberOfPingsToGraph = 40
-    static [int] $graphScaleMax = 100
-    static [int] $graphScaleMin = 0
+    static [int] $numberOfPingsToGraph = 40 # Default: 40
+    static [int] $graphScaleMax = 200 # Default: 200
+    static [int] $graphScaleMin = 0 # Default: 0
 
     static [bool] $logEnabled = $true # Default: $true
     static [string] $logName = "Network Availability"
