@@ -148,10 +148,10 @@ function Invoke-TestConnection {
         }
         else {
             $Global:pingsLatency.Add($($test.PingReplyDetails.RoundtripTime))
-            $latencySum = 0
-            $Global:pingsLatency | ForEach-Object { $latencySum += $_ }
-            $Global:averageLatency = [math]::Round($($latencySum / $Global:pingsLatency.count), 0)
         }
+        $latencySum = 0
+        $Global:pingsLatency | ForEach-Object { $latencySum += $_ }
+        $Global:averageLatency = [math]::Round($($latencySum / $Global:pingsLatency.count), 0)
         $Global:latencyToGraph.Add($($test.PingReplyDetails.RoundtripTime))
     }
     else {
